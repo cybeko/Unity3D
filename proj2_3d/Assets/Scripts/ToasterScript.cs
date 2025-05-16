@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Threading;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class ToasterScript : MonoBehaviour

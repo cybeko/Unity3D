@@ -14,10 +14,21 @@ public class EffectsScript : MonoBehaviour
         keyCollectedOutOfTimeSound = audioSources[2];
 
         GameEventSystem.Subscribe(OnGameEvent);
+        GameState.AddListener(OnGameStateChanged);
     }
     void Update()
     {
     }
+    private void OnGameStateChanged(string fieldName)
+    {
+        if (fieldName == null || fieldName == nameof(GameState.effectsSingleVolume))
+        {
+            keyCollectedInTimeSound.volume =
+            batteryCollectedSound.volume =
+            keyCollectedOutOfTimeSound.volume = GameState.effectsSingleVolume;
+        }
+    }
+
     private void OnGameEvent(GameEvent gameEvent)
     {
         if(gameEvent.sound != null)
@@ -40,5 +51,6 @@ public class EffectsScript : MonoBehaviour
     private void OnDestroy()
     {
         GameEventSystem.Unsubscribe(OnGameEvent);
+        GameState.RemoveListener(OnGameStateChanged);
     }
 }

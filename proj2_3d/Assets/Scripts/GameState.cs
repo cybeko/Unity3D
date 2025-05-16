@@ -5,6 +5,47 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
+    private static float _effectsSingleVolume = 0.25f;
+    public static float effectsSingleVolume
+    {
+        get => _effectsSingleVolume;
+        set
+        {
+            if (_effectsSingleVolume != value)
+            {
+                _effectsSingleVolume = value;
+                Notify(nameof(effectsSingleVolume));
+            }
+        }
+    }
+
+    private static float _effectsVolume = 0.25f;
+    public static float effectsVolume
+    {
+        get => _effectsVolume;
+        set
+        {
+            if (_effectsVolume != value)
+            {
+                _effectsVolume = value;
+                Notify(nameof(effectsVolume));
+            }
+        }
+    }
+    private static float _musicVolume = 0.09f;
+    public static float musicVolume
+    {
+        get => _musicVolume;
+        set
+        {
+            if (_musicVolume != value)
+            {
+                _musicVolume = value;
+                Notify(nameof(musicVolume));
+            }
+        }
+    }
+
     private static bool _isDay;
     public static bool isDay
     {
@@ -39,6 +80,7 @@ public class GameState : MonoBehaviour
     public static void AddListener(Action<string> listener)
     {
         listeners.Add(listener);
+        listener(null);
     }
     public static void RemoveListener(Action<string> listener)
     {

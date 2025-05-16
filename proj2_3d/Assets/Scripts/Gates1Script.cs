@@ -45,15 +45,17 @@ public class Gates1Script : MonoBehaviour
             }
             else
             {
-                hitCount += 1;
-                if (hitCount == 1)
+                hitCount++;
+
+                string toastMessage = hitCount == 1
+                    ? $"You need a key{keyNumber} to open the gate."
+                    : $"Hitting the gate multiple ({hitCount}) times won't open it.";
+
+                GameEventSystem.EmitEvent(new GameEvent
                 {
-                    ToasterScript.Toast($"You need a key{keyNumber} to open the blue gate.");
-                }
-                else
-                {
-                    ToasterScript.Toast($"Hitting the gate {hitCount} times won't open it.");
-                }
+                    type = "GateCollision",
+                    toast = toastMessage
+                });
             }
         }
     }

@@ -28,8 +28,6 @@ public class CameraScript : MonoBehaviour
     public static Transform fixedCameraPosition2 = null!;
     public static int currentFixedIndex = 0;
 
-
-
     void Start()
     {
         offset = this.transform.position - cameraAnchor.position;
@@ -49,7 +47,7 @@ public class CameraScript : MonoBehaviour
 
         else
         {
-            Vector2 zoom = Input.mouseScrollDelta;
+            Vector2 zoom = Input.mouseScrollDelta * Time.timeScale;
 
             if (zoom.y > 0 && !GameState.isFpv)
             {

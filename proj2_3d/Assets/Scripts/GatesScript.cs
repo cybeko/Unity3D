@@ -19,7 +19,6 @@ public class GatesScript : MonoBehaviour
     private AudioSource openingSound2;
     private bool hasEmittedOpenEvent = false;
 
-
     private bool isOpened = false;
     void Start()
     {
@@ -35,8 +34,17 @@ public class GatesScript : MonoBehaviour
             openingSound2 = openingSounds[1];
 
         GameEventSystem.Subscribe(OnGameEvent);
+        GameState.AddListener(OnGameStateChanged);
+        OnGameStateChanged(null);
     }
-
+    private void OnGameStateChanged(string fieldName)
+    {
+        if (fieldName == nameof(GameState.effectsVolume))
+        {
+            if (openingSound1 != null) openingSound1.volume = GameState.effectsVolume;
+            if (openingSound2 != null) openingSound2.volume = GameState.effectsVolume;
+        }
+    }
 
     void Update()
     {
@@ -54,10 +62,17 @@ public class GatesScript : MonoBehaviour
                 Debug.Log($"[GATE] Emitting Gate{keyNumber}Opened event");
 
                 isOpened = true;
-                openingSound1?.Stop();
-                openingSound2?.Stop();
+                if (openingSound1 != null && openingSound2 != null)
+                {
+                    openingSound1?.Stop();
+                    openingSound2?.Stop();
+                }
 
             }
+        }
+        if((openingSound1 != null && openingSound2 != null && (openingSound1.isPlaying || openingSound2.isPlaying)))
+        {
+            openingSound1.volume= openingSound2.volume = Time.timeScale == 0.0f? 0.0f : GameState.effectsVolume;
         }
     }
 
@@ -93,15 +108,17 @@ public class GatesScript : MonoBehaviour
             }
             else
             {
-                hitCount += 1;
-                if (hitCount == 1)
+                hitCount++;
+
+                string toastMessage = hitCount == 1
+                    ? $"You need a key{keyNumber} to open the gate."
+                    : $"Hitting the gate multiple ({hitCount}) times won't open it.";
+
+                GameEventSystem.EmitEvent(new GameEvent
                 {
-                    ToasterScript.Toast($"You need a key{keyNumber} to open the blue gate.");
-                }
-                else
-                {
-                    ToasterScript.Toast($"Hitting the gate multiple times won't open it.");
-                }
+                    type = "GateCollision",
+                    toast = toastMessage
+                });
             }
         }
     }   
@@ -116,7 +133,6 @@ public class GatesScript : MonoBehaviour
     private void OnDestroy()
     {
         GameEventSystem.Unsubscribe(OnGameEvent);
-
+        GameState.RemoveListener(OnGameStateChanged);
     }
-
 }
