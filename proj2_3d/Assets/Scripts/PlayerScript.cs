@@ -5,8 +5,18 @@ public class PlayerScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
+   
+    private static PlayerScript prevInstance = null;
     void Start()
     {
+        if(prevInstance != null )
+        {
+            GameObject.Destroy( this.gameObject );
+        }
+        else
+        {
+            prevInstance = this;
+        }
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
     }

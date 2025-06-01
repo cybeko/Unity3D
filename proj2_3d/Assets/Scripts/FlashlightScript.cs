@@ -20,6 +20,9 @@ public class FlashlightScript : MonoBehaviour
             Debug.Log("None");
         }
         _light = GetComponent<Light>();
+        _light.shadowBias = 0.05f;         // Try between 0.05 and 0.2
+        _light.shadowNormalBias = 0.4f;    // Try between 0.3 and 0.5
+
         if (_light == null)
         {
             Debug.LogError("No Light component found");
@@ -37,9 +40,17 @@ public class FlashlightScript : MonoBehaviour
         Quaternion baseRot = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
 
         Quaternion totalRot = baseRot * Quaternion.Euler(0f, yawOffset, 0f);
+        if (GameState.isFpv)
+        {
+            transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.2f;
+        }
+        else
+        {
+            transform.position = player.transform.position;
+        }
 
-        transform.position = player.transform.position;
         transform.rotation = totalRot;
+
 
         if (GameState.isFpv && !GameState.isDay)
         {

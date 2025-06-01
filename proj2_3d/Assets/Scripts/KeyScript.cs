@@ -61,6 +61,8 @@ public class KeyScript : MonoBehaviour
     {
         if (other.name == "Player")
         {
+            GameState.bag.Add($"Key{keyNumber}", 1);
+
             GameEventSystem.EmitEvent(new GameEvent
             {
                 type = $"Key{keyNumber}Collected",

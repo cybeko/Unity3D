@@ -25,7 +25,7 @@ public class CameraFixedScript : MonoBehaviour
             CameraScript.isFixed = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Backspace))
         {
             CameraScript.isFixed = false;
         }

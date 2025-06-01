@@ -59,17 +59,15 @@ public class LightScript : MonoBehaviour
     }
     private void FpvChanged()
     {
-        if(GameState.isDay)
+        if (!GameState.isDay)
         {
-            if (!GameState.isFpv)
+            foreach (Light light in nightLights)
             {
-                foreach (Light light in nightLights)
-                {
-                    light.intensity = GameState.isFpv ? 0.0f : 1.0f;
-                }
+                light.intensity = GameState.isFpv ? 0.0f : 1.0f;
             }
         }
     }
+
     private void OnGameStateChanged(string fieldName)
     {
         if(fieldName == nameof(GameState.isDay))

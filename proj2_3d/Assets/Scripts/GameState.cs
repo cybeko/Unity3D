@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
-    private static float _effectsSingleVolume = 0.25f;
+    public static Dictionary<string, int> bag {  get; } = new Dictionary<string, int>();    
+
+    private static float _effectsSingleVolume = 0.5f;
     public static float effectsSingleVolume
     {
         get => _effectsSingleVolume;
@@ -19,7 +21,7 @@ public class GameState : MonoBehaviour
         }
     }
 
-    private static float _effectsVolume = 0.25f;
+    private static float _effectsVolume = 0.5f;
     public static float effectsVolume
     {
         get => _effectsVolume;

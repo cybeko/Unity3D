@@ -6,8 +6,22 @@ public class EffectsScript : MonoBehaviour
     private AudioSource keyCollectedOutOfTimeSound;
     private AudioSource batteryCollectedSound;
 
+    private static EffectsScript prevInstance;
+
+
     void Start()
     {
+        if (prevInstance == null)
+        {
+            prevInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         AudioSource[] audioSources = GetComponentsInChildren<AudioSource>();
         keyCollectedInTimeSound = audioSources[0];
         batteryCollectedSound = audioSources[1];
@@ -26,6 +40,7 @@ public class EffectsScript : MonoBehaviour
             keyCollectedInTimeSound.volume =
             batteryCollectedSound.volume =
             keyCollectedOutOfTimeSound.volume = GameState.effectsSingleVolume;
+            Debug.Log($"[EffectsScript] OnGameStateChanged({fieldName}): setting volumes to {GameState.effectsSingleVolume}");
         }
     }
 

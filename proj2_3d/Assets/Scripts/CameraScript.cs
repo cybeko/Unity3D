@@ -5,7 +5,6 @@ public class CameraScript : MonoBehaviour
 {
     private Vector3 offset;
 
-    [SerializeField]
     private Transform cameraAnchor;
 
     private InputAction lookAction;
@@ -13,8 +12,8 @@ public class CameraScript : MonoBehaviour
     private float angleX;
     private float angleY0;
     private float angleX0;
-    private float sensitivityY = 10.0f;
-    private float sensitivityX = 10.0f;
+    private float sensitivityY = 30.0f;
+    private float sensitivityX = 15.0f;
     private float minOffset = 1.5f;
     private float maxOffset = 12f;
 
@@ -30,6 +29,7 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
+        cameraAnchor = GameObject.Find("Player").transform;
         offset = this.transform.position - cameraAnchor.position;
         lookAction = InputSystem.actions.FindAction("Look");
         angleY = angleY0 = this.transform.eulerAngles.y;
@@ -85,9 +85,18 @@ public class CameraScript : MonoBehaviour
                 angleX = Mathf.Clamp(angleX, minAngle, maxAngle);
             }
 
-
             this.transform.eulerAngles = new Vector3(angleX, angleY, 0f);
-            this.transform.position = cameraAnchor.position + Quaternion.Euler(angleX - angleX0, angleY - angleY0, 0f) * offset;
+
+            if (GameState.isFpv)
+            {
+                Vector3 headOffset = new Vector3(0f, 0.2f, 0f);
+                this.transform.position = cameraAnchor.position + headOffset;
+            }
+            else
+            {
+                this.transform.position = cameraAnchor.position + Quaternion.Euler(angleX - angleX0, angleY - angleY0, 0f) * offset;
+            }
+
         }
     }
 }

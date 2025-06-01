@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
+    [SerializeField] private Image[] bagImages;
+
     private GameObject content;
     private bool isMuted = false;
     private Slider effectsSlider;
@@ -16,7 +18,6 @@ public class MenuScript : MonoBehaviour
     private float defaultEffectsVolume;
     private float defaultEffectsSingleVolume;
     private bool defaultIsMuted;
-
 
     void Start()
     {
@@ -79,7 +80,6 @@ public class MenuScript : MonoBehaviour
 
         }
     }
-
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape)) {
@@ -92,11 +92,25 @@ public class MenuScript : MonoBehaviour
             }
         }
     }
-
     private void Show()
     {
+
         content.SetActive(true);
         Time.timeScale = startTimeScale;
+
+        for (int i = 0; i < bagImages.Length; i++) 
+        {
+            if (GameState.bag.ContainsKey($"Key{i + 1}"))
+            {
+                bagImages[i].enabled = true;
+            }
+            else
+            {
+                bagImages[i].enabled = false;
+            }
+        }
+        Time.timeScale = 0.0f;
+
     }
     private void Hide()
     {
@@ -111,11 +125,13 @@ public class MenuScript : MonoBehaviour
     }
     public void OnEffectsVolumeChanged(float volume)
     {
-        if(!isMuted){ GameState.effectsVolume = volume; }
+        Debug.Log($"[Menu] general slider moved: {volume}");
+        if (!isMuted){ GameState.effectsVolume = volume; }
 
     }
     public void OnEffectsSingleVolumeChanged(float volume)
     {
+        Debug.Log($"[Menu] single-SFX slider moved: {volume}");
         if (!isMuted) { GameState.effectsSingleVolume = volume; }
     }
     public void OnValueChanged(bool isMute)
